@@ -21,8 +21,8 @@ url: http://blog.coeho.com
 rss_url: /pages/atom.xml
 
 # gavatar头像及Favicon
-gavatar: /public/img/deer3.png
-favicon: /public/img/deer3.png
+gavatar: /public/img/skeleton.png
+favicon: /public/img/skeleton.png
 
 # google analytics 设置
 ga:
