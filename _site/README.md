@@ -1,1 +1,0 @@
-# lomislu.github.io
