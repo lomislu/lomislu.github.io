@@ -2,7 +2,7 @@
 layout: post
 title: Linux 安装与配置 Kafka 环境
 category: 运维
-tags: Linux
+tags: Linux运维
 keywords: 
 description: 
 ---

@@ -1,0 +1,713 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Lomis的博客</title>
+    <link>http://localhost:4000</link>
+    <description>My personal blog</description>
+    
+      <item>
+        <title>2016年阅读书单</title>
+        <link>http://localhost:4000/2016/12/01/Book-List-2016.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/12/01/Book-List-2016.html</guid>
+        <pubDate>Thu, 01 Dec 2016 00:00:00 +0800</pubDate>
+        <description></description>
+      </item>
+    
+      <item>
+        <title>修改 Linux 的最大文件连接数</title>
+        <link>http://localhost:4000/2016/11/30/Linux-Too-Many-Open-Files.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/11/30/Linux-Too-Many-Open-Files.html</guid>
+        <pubDate>Wed, 30 Nov 2016 00:00:00 +0800</pubDate>
+        <description>&lt;p&gt;在项目上线过一段时间后，发现程序报 Too many open files 异常，今天给主要是为大家分析一下该问题的原因及解决方案。&lt;/p&gt;
+
+&lt;h3&gt;1、原因分析&lt;/h3&gt;
+
+&lt;p&gt;一般出现该异常，通常情况下是程序打的文件连接数过多，超过了系统的设定值；&lt;/p&gt;
+
+&lt;p&gt;解决该问题最好还是先从程序的角度入手，审核代码一下代码看有没有打开的文件或 Socket 没有正常关闭；&lt;/p&gt;
+
+&lt;p&gt;以下是通过调整系统参数进行解决该问题的方案；&lt;/p&gt;
+
+&lt;h3&gt;2、解决方案&lt;/h3&gt;
+
+&lt;p&gt;网上的解决方案有很多，大致分为了两个方案，分别为：临时方案、永久方案&lt;/p&gt;
+
+&lt;p&gt;具体采用哪种方案，可根据各自的需求进行选择，我这里选择的是永久方案；&lt;/p&gt;
+
+&lt;h4&gt;2.1、临时方案&lt;/h4&gt;
+
+&lt;p&gt;采用 &lt;code&gt;ulimit -n 65535&lt;/code&gt; 进行设置，但该方案只能当前终端有效，一旦退出则恢复为系统默认值；&lt;/p&gt;
+
+&lt;h4&gt;2.2、永久方案&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;在 &lt;code&gt;/etc/security/limits.conf&lt;/code&gt; 文件的后面加上以下两行内容：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;   soft    nofile  65535
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;   hard    nofile  65535
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;该方案需要重启服务器才可生效。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;重启完成后可能过以下命令查看结果：&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ulimit&lt;/span&gt; -a
+core file size          &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;blocks, -c&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 0
+data seg size           &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;kbytes, -d&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; unlimited
+scheduling priority             &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;-e&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 0
+file size               &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;blocks, -f&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; unlimited
+pending signals                 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;-i&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 128630
+max locked memory       &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;kbytes, -l&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 64
+max memory size         &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;kbytes, -m&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; unlimited
+open files                      &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;-n&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 65535
+pipe size            &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;512 bytes, -p&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 8
+POSIX message queues     &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;bytes, -q&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 819200
+real-time priority              &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;-r&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 0
+stack size              &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;kbytes, -s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 8192
+cpu &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;               &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;seconds, -t&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; unlimited
+max user processes              &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;-u&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 128630
+virtual memory          &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;kbytes, -v&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; unlimited
+file locks                      &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;-x&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; unlimited
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+      </item>
+    
+      <item>
+        <title>Linux 安装与配置 Tomcat 环境</title>
+        <link>http://localhost:4000/2016/11/25/Linux-Install-Tomcat.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/11/25/Linux-Install-Tomcat.html</guid>
+        <pubDate>Fri, 25 Nov 2016 00:00:00 +0800</pubDate>
+        <description>&lt;p&gt;基于本人自己在CentOS 6.8系统下用不同的方式进行Tomcat，现整理成本文，如有问题，欢迎指正！！！&lt;/p&gt;
+
+&lt;h3&gt;环境介绍&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CentOS 6.8 X64&lt;/li&gt;
+&lt;li&gt;Tomcat：6.0&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Tomcat安装&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;从&lt;a href=&quot;http://tomcat.apache.org&quot;&gt;Apache官网&lt;/a&gt;下载包&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;wget http://mirror.stjschools.org/public/apache/tomcat/tomcat-6/v6.0.45/bin/apache-tomcat-6.0.45.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;解压、复制、重命名&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# 解压并复制到/usr/local/下&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;tar -xzf apache-tomcat-6.0.45.tar.gz -C /usr/local/
+&lt;span class=&quot;c&quot;&gt;# 重命名&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mv /usr/local/apache-tomcat-6.0.45 /usr/local/tomcat
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;相关命令&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /usr/local/tomcat/bin
+&lt;span class=&quot;c&quot;&gt;# 启动服务&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;./startup.sh
+&lt;span class=&quot;c&quot;&gt;# 停止服务&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;./shutdown.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+      </item>
+    
+      <item>
+        <title>Linux 安装与配置 Redis 环境</title>
+        <link>http://localhost:4000/2016/11/25/Linux-Install-Redis.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/11/25/Linux-Install-Redis.html</guid>
+        <pubDate>Fri, 25 Nov 2016 00:00:00 +0800</pubDate>
+        <description>&lt;p&gt;本文简单介绍了在CentOS 6.8系统下Redis的安装过程，及启动脚本的编写。
+如有问题，欢迎指正！！！&lt;/p&gt;
+
+&lt;h3&gt;环境介绍&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;操作系统：CentOS 6.8 X64&lt;/li&gt;
+&lt;li&gt;软件版本：Redis 2.8.9&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;安装tcl支持&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Reids需要tcl的依赖，所以先安装该依赖，命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;yum install tcl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;下载Redis&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;wget http://download.redis.io/releases/redis-2.8.9.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;安装Redis&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;tar xzf redis-2.8.9.tar.gz
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;redis-2.8.9
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;make
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;make install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;安装后会自动把redis-server,redis-cli,redis-benchmark,redis-check-aof,redis-check-dump复制到/usr/local/bin目录下&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3&gt;配置Redis&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;vim redis.conf
+&lt;span class=&quot;c&quot;&gt;# daemonize no修改为yes&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cp redis.conf /etc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;编写启动脚本&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;创建启动脚本文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;touch redis
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;打开该文件并写入以下内容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/bin:/sbin:/usr/bin:/bin
+
+&lt;span class=&quot;nv&quot;&gt;REDISPORT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;6379
+&lt;span class=&quot;nv&quot;&gt;EXEC&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/bin/redis-server
+&lt;span class=&quot;nv&quot;&gt;REDIS_CLI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/bin/redis-cli
+
+&lt;span class=&quot;nv&quot;&gt;PIDFILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/var/run/redis.pid
+&lt;span class=&quot;nv&quot;&gt;CONF&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/etc/redis.conf&quot;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in
+    &lt;/span&gt;start&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; -f &lt;span class=&quot;nv&quot;&gt;$PIDFILE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;then
+                &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PIDFILE&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; exists, process is already running or crashed&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;else
+                &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Starting Redis server...&quot;&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;$EXEC&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$CONF&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;fi
+        if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;0&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; 
+        &lt;span class=&quot;k&quot;&gt;then
+              &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Redis is running...&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+    stop&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ! -f &lt;span class=&quot;nv&quot;&gt;$PIDFILE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;then
+                &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PIDFILE&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; does not exist, process is not running&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;else
+                &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;cat &lt;span class=&quot;nv&quot;&gt;$PIDFILE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Stopping ...&quot;&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;$REDIS_CLI&lt;/span&gt; -p &lt;span class=&quot;nv&quot;&gt;$REDISPORT&lt;/span&gt; SHUTDOWN
+                &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; -x &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PIDFILE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+               &lt;span class=&quot;k&quot;&gt;do
+                    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Waiting for Redis to shutdown ...&quot;&lt;/span&gt;
+                    sleep 1
+                &lt;span class=&quot;k&quot;&gt;done
+                &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Redis stopped&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+   restart|force-reload&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; stop
+        &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; start
+        &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Usage: /etc/init.d/redis {start|stop|restart|force-reload}&quot;&lt;/span&gt; &amp;gt;&amp;amp;2
+        &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1
+&lt;span class=&quot;k&quot;&gt;esac&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;拷贝该文件到&lt;code&gt;/etc/init.d/&lt;/code&gt;目录下，命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cp redis /etc/init.d/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;设置启动脚本的执行权限，命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;chmod a+x /etc/init.d/redis
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;开机启动&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;设置redis开机启动，命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;chkconfig redis on
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;相关命令&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# 启动服务&lt;/span&gt;
+service redis start
+&lt;span class=&quot;c&quot;&gt;# 重启服务&lt;/span&gt;
+service redis restart
+&lt;span class=&quot;c&quot;&gt;# 停止服务&lt;/span&gt;
+service redis stop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+      </item>
+    
+      <item>
+        <title>Linux 安装与配置 Nginx 环境</title>
+        <link>http://localhost:4000/2016/11/25/Linux-Install-Nginx.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/11/25/Linux-Install-Nginx.html</guid>
+        <pubDate>Fri, 25 Nov 2016 00:00:00 +0800</pubDate>
+        <description>&lt;p&gt;基于本人自己在CentOS 6.8系统下用不同的方式进行安装Nginx，现整理成本文，如有问题，欢迎指正！！！&lt;/p&gt;
+
+&lt;h3&gt;环境介绍&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CentOS 6.8 X64&lt;/li&gt;
+&lt;li&gt;Nginx：1.8.1&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Nginx&lt;/h3&gt;
+
+&lt;!--### yum方式安装--&gt;
+
+&lt;ul&gt;
+&lt;li&gt;可通过以下命令查看yum所提供的Nginx服务器的可下载版本&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;yum list | grep nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;通过以上命令查看到可下载的Nginx版本后，可执行下以命令进行Nginx的安装&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;yum install -y nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;相关命令&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# 启动服务&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;service nginx start
+&lt;span class=&quot;c&quot;&gt;# 重启服务&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;service nginx restart
+&lt;span class=&quot;c&quot;&gt;# 停止服务&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;service nginx stop
+&lt;span class=&quot;c&quot;&gt;# 查看服务状态&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;service nginx status
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;相关文件位置位于：&lt;code&gt;/etc/nginx&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;查看相关信息：&lt;code&gt;rpm -qi nginx&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!--### 源码编译安装--&gt;
+
+&lt;!-- - 持续更新中... --&gt;
+</description>
+      </item>
+    
+      <item>
+        <title>Linux 安装与配置 MySQL 环境</title>
+        <link>http://localhost:4000/2016/11/25/Linux-Install-MySQL.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/11/25/Linux-Install-MySQL.html</guid>
+        <pubDate>Fri, 25 Nov 2016 00:00:00 +0800</pubDate>
+        <description>&lt;p&gt;基于本人自己在CentOS 6.8系统下用不同的方式进行安装MySQL，现整理成本文，如有问题，欢迎指正！！！&lt;/p&gt;
+
+&lt;h3&gt;环境介绍&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CentOS 6.8 X64&lt;/li&gt;
+&lt;li&gt;MySQL：5.5&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;MySQL安装&lt;/h3&gt;
+
+&lt;!--### yum方式安装--&gt;
+
+&lt;ul&gt;
+&lt;li&gt;要通过yum方式进行安装MySQL时，首先要通过以下命令来查看yum所提供的MySQL数据库的可下载版本&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;yum list | grep mysql
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;通过以上命令查看到可下载的MySQL版本后，可执行下以命令进行MySQL的安装&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;yum install -y mysql-server
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;执行以上命令之后，等待一段时间后，yum会帮我们选择MySQL数据库所需的软件以及其它依赖软件，并进行安装，安装过程视网络情况而定，等待一段时间之后，当出现Complete！就代表MySQL数据库安装成功&lt;/li&gt;
+&lt;li&gt;安装成功之后可用以下命令查看当前MySQL数据库的相关信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rpm -qi mysql-server
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;首次使用&lt;code&gt;service mysqld start&lt;/code&gt;启动MySQL服务时，MySQL首先会进行初始化配置&lt;/li&gt;
+&lt;li&gt;首次启动MySQL服务时会提示非常多的信息，目的就是对MySQL数库进行初始化配置，当我们使用&lt;code&gt;service mysqld restart&lt;/code&gt;再次重新启动时，就不会提示这么多的信息&lt;/li&gt;
+&lt;li&gt;MySQL的开机自启动设置，命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;chkconfig —list | grep mysqld
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;chkconfig mysqld on
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;进行MySQL的配置&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mysql_secure_installation
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;执行以上命令时，所有需要确认的地方全部为：y&lt;/p&gt;
+
+&lt;p&gt;在需要设置root的密码需要注意一下&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+&lt;li&gt;设置root账户密码之后就可以通过以下命令登录MySQL数据库&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mysql -u root -p
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;相关命令&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# 启动服务&lt;/span&gt;
+service mysqld start
+&lt;span class=&quot;c&quot;&gt;# 重启服务&lt;/span&gt;
+service mysqld restart
+&lt;span class=&quot;c&quot;&gt;# 停止服务&lt;/span&gt;
+service mysqld stop
+&lt;span class=&quot;c&quot;&gt;# 查看服务状态&lt;/span&gt;
+service mysqld status
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;主配置文件位置：&lt;code&gt;/etc/my.cnf&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;数据文件存放位置：&lt;code&gt;/var/lib/mysql&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;MySQL远程访问配置&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# 使用以下命令连接MySQL&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mysql -u root -p
+
+&lt;span class=&quot;c&quot;&gt;# 连接后输入以下命令&lt;/span&gt;
+use mysql;
+update user &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;host &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; ‘%’ where &lt;span class=&quot;nv&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;‘root’ and &lt;span class=&quot;nv&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;‘localhost’;
+flush privileges;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;!--### 源码编译安装--&gt;
+
+&lt;!--- 持续更新中...--&gt;
+</description>
+      </item>
+    
+      <item>
+        <title>Linux 安装与配置 Kafka 环境</title>
+        <link>http://localhost:4000/2016/11/25/Linux-Install-Kafka.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/11/25/Linux-Install-Kafka.html</guid>
+        <pubDate>Fri, 25 Nov 2016 00:00:00 +0800</pubDate>
+        <description>&lt;p&gt;由于工作中简单的用到了Apache Kafka框架，主要使用Kafka进行日志输出，方便后续对日志进行分析与统计，故整理一下，以作参考，方便后续查阅。&lt;/p&gt;
+
+&lt;h3&gt;环境介绍&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;操作系统：CentOS 6.8 X64&lt;/li&gt;
+&lt;li&gt;软件版本：kafka_2.10-0.8.2.2&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Kafka的简单介绍&lt;/h3&gt;
+
+&lt;p&gt;Kafka是一种高吞吐量的分布式发布订阅消息系统，它可以处理消费者规模的网站中的所有动作流数据。 这种动作（网页浏览，搜索和其他用户的行动）是在现代网络上的许多社会功能的一个关键因素。 这些数据通常是由于吞吐量的要求而通过处理日志和日志聚合来解决。 对于像Hadoop的一样的日志数据和离线分析系统，但又要求实时处理的限制，这是一个可行的解决方案。Kafka的目的是通过Hadoop的并行加载机制来统一线上和离线的消息处理，也是为了通过集群机来提供实时的消费。来源:&lt;a href=&quot;http://baike.baidu.com/link?url=xDBVsk6F3B10AZIGZHzgIw23OPTZuyZoZthIAKL_TUn74rN8vjX05ee8IJy3bWdPldzOGzm6X5d-gNWdTy2-BK&quot;&gt;百度百科&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;安装与简单使用&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;下载软件包&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;wget http://apache.fayea.com/kafka/0.8.2.2/kafka_2.10-0.8.2.2.tgz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;安装&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;tar xzf kafka_2.10-0.8.2.2.tgz -c ~/
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mv ~/kafka_2.10-0.8.2.2 ~/kafak-server
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;启动&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/kafka-server
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;nohup bin/zookeeper-server-start.sh config/zookeeper.properties &amp;amp;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;nohup bin/kafka-server-start.sh config/server.properties &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;常用命令&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;创建一个Topic&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;bin/kafka-topics.sh --create --zookeeper localhost:2181 --topic &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;查看所有Topic&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;bin/kafka-topics.sh --list --zookeeper localhost:2181
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;连接一个Topic&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;bin/kafka-console-producer.sh --broker-list localhost:9092 --topic &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;查看并接收一个Topic的信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt; --from-beginning
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;查看所有Topic的详细信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;bin/kafka-topics.sh --describe --zookeeper localhost:2181
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;查看某一个Topic的详细信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+      </item>
+    
+      <item>
+        <title>Linux 安装与配置 Java 环境</title>
+        <link>http://localhost:4000/2016/11/25/Linux-Install-Java.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/11/25/Linux-Install-Java.html</guid>
+        <pubDate>Fri, 25 Nov 2016 00:00:00 +0800</pubDate>
+        <description>&lt;p&gt;基于本人自己在CentOS 6.8系统下用不同的方式进行Java，现整理成本文，如有问题，欢迎指正！！！&lt;/p&gt;
+
+&lt;h3&gt;环境介绍&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CentOS 6.8 X64&lt;/li&gt;
+&lt;li&gt;Java：7.79&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;卸载OpenJDK&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;可通过以下命令来查看当前系统是否已安装了Java&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rpm -qa | grep java
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;有的话，通过以下命令进行卸载OpenJDK&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;普通删除模式，删除时会提示有依赖其它文件&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rpm -e java
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;或&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;强力删除模式&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rpm -e —nodeps java
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+
+&lt;h3&gt;RPM方式安装&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;从&lt;a href=&quot;http://www.oracle.com&quot;&gt;Oracle&lt;/a&gt;官网下载Java的RPM安装包&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;wget http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-linux-x64.rpm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;安装&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rpm -ivh jdk-7u79-linux-x64.rpm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;环境变量设置，在&lt;code&gt;/etc/profile&lt;/code&gt;文件结尾追加以下内容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/java/jdk1.7.0_79
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;JRE_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/java/jdk1.7.0_79/jre
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$JAVA_HOME&lt;/span&gt;/bin:&lt;span class=&quot;nv&quot;&gt;$JRE_HOME&lt;/span&gt;/bin
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;.:&lt;span class=&quot;nv&quot;&gt;$JAVA_HOME&lt;/span&gt;/lib/dt.jar:&lt;span class=&quot;nv&quot;&gt;$JAVA_HOME&lt;/span&gt;/lib/tools.jar:&lt;span class=&quot;nv&quot;&gt;$JRE_HOME&lt;/span&gt;/lib
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;使环境变量生效&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; /etc/profile
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;查看Java版本&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;java -version
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;软件包安装&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;从&lt;a href=&quot;http://www.oracle.com&quot;&gt;Oracle&lt;/a&gt;官网下载Java的安装包&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;wget  http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-linux-x64.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果wget命令无法使用的话，请先执行:&lt;code&gt;yum install wget&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+&lt;li&gt;解压软件包&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mkdir /usr/local/java
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;tar -xzf jdk-7u79-linux-x64.tar.gz -C /usr/local/java/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;环境变量设置，在&lt;code&gt;/etc/profile&lt;/code&gt;文件结尾追加以下内容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;JAVA_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/java/jdk1.7.0_79
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;JRE_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/java/jdk1.7.0_79/jre
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$JAVA_HOME&lt;/span&gt;/bin:&lt;span class=&quot;nv&quot;&gt;$JRE_HOME&lt;/span&gt;/bin
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;.:&lt;span class=&quot;nv&quot;&gt;$JAVA_HOME&lt;/span&gt;/lib/dt.jar:&lt;span class=&quot;nv&quot;&gt;$JAVA_HOME&lt;/span&gt;/lib/tools.jar:&lt;span class=&quot;nv&quot;&gt;$JRE_HOME&lt;/span&gt;/lib
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;使环境变量生效&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; /etc/profile
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;查看Java版本&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;java -version
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+      </item>
+    
+      <item>
+        <title>Linux 安装与配置 Docker 环境</title>
+        <link>http://localhost:4000/2016/11/25/Linux-Install-Docker.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/11/25/Linux-Install-Docker.html</guid>
+        <pubDate>Fri, 25 Nov 2016 00:00:00 +0800</pubDate>
+        <description>&lt;p&gt;总结一下自己在 CentOS 6.8系统下安装与配置 Docker 的全过程。并简单讲解了一下Docker的常用命令。
+如有问题，欢迎指正！！！&lt;/p&gt;
+
+&lt;h3&gt;环境介绍&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;操作系统：CentOS 6.8 X64&lt;/li&gt;
+&lt;li&gt;软件版本：Docker 1.11.2&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Docker的简单介绍&lt;/h3&gt;
+
+&lt;p&gt;Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。来源:&lt;a href=&quot;http://baike.baidu.com/link?url=In6dGkZvsuAEfdgTiFmhFZY6VvXzG2ldEak8Pf_6ea0_iuxqVQou4B96yWxT4bA-vXBWDuu4pSYBbcNz7sgZZ_&quot;&gt;百度百科&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;由于公司将整体采用Docker进行环境的部署，故简单学习了一下Docker的基本用法，现整理出来，以作参考！&lt;/p&gt;
+
+&lt;h3&gt;安装Docker与使用&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;安装Docker服务，命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;yum install docker -y
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;安装完成之后，启动Docker服务，命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;service docker start      &lt;span class=&quot;c&quot;&gt;# 启动服务&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;service docker stop       &lt;span class=&quot;c&quot;&gt;# 停止服务&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;service docker restart    &lt;span class=&quot;c&quot;&gt;# 重启服务&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;service docker status     &lt;span class=&quot;c&quot;&gt;# 服务状态&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Images（镜像）篇&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;拉取Image，命令如下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker pull repository:tag
+&lt;span class=&quot;c&quot;&gt;# 如拉取CentOS的Image，命令如下：&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker pull centos:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;查看Image，命令如下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker images
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;删除Image，命令如下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker rmi &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;image id]/[repository:tag]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;查看Image信息，命令如下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker inspect &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;image id]/[repository:tag]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;搜索Image，命令如下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker search centos
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;提交一个容器为镜像，命令如下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker commit &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;container id]/[container name] repository:tag
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Container(容器）篇&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;创建Container，命令如下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker create -it centos:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;新建并启动Container，通过下面命令可以启动一个bash终端，允许用户进行交互，命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -i -t centos:latest /bin/bash
+
+&lt;span class=&quot;c&quot;&gt;# 常用参数：&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -t : 让Docker分配一个伪终端并绑定到容器的标准输入上；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -i : 让容器的标准输入保持打开状态；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -d : 让容器在后台以守护状态形式运行；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -v ：可以在容器内创建一个数据卷，可多次使用；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -P : 指定端口映射，允许外部访问容器需要暴露的端口，可多次使用；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -name ：自定义容器的名称；&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;停止Container，命令如下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker stop &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;container id]/[container name]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;查看Container，命令如下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker ps -a
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;进入Container，命令如下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; -it  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;container id]/[container name] /bin/bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;删除Container，命令如下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker rm  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;container id]/[container name]
+
+&lt;span class=&quot;c&quot;&gt;# 常用参数：&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -f ：强行停止并删除一个运行中的容器；&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -l : 删除容器的连接，但保留容器； &lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -v : 删除容器挂载的数据卷；&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;查看 Container 的使用情况，命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker stats
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;数据卷篇&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;挂载一个目录作为数据卷，命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d -P --name &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;-vol -v /home/ec2-user/vol:/home/vol centos:latest /run.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;挂载一个本地主机文件作为数据卷，命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d -P --name &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;-vol -v ~/.bash_profile:/home/.bash_profile centos:latest /run.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;网络基础配置篇&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;映射端口地址，命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# 将容器内的8080端口映射为本机的18080端口&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d -P 18080:8080 --name &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;-vol centos:latest /run.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+      </item>
+    
+      <item>
+        <title>占位</title>
+        <link>http://localhost:4000/2016/11/25/life-001.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/11/25/life-001.html</guid>
+        <pubDate>Fri, 25 Nov 2016 00:00:00 +0800</pubDate>
+        <description></description>
+      </item>
+    
+      <item>
+        <title>技术占位</title>
+        <link>http://localhost:4000/2016/11/25/Java-Basic-001.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/11/25/Java-Basic-001.html</guid>
+        <pubDate>Fri, 25 Nov 2016 00:00:00 +0800</pubDate>
+        <description></description>
+      </item>
+    
+  </channel>
+</rss>

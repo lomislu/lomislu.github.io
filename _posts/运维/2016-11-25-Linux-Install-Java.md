@@ -2,7 +2,7 @@
 layout: post
 title: Linux 安装与配置 Java 环境
 category: 运维
-tags: Linux
+tags: Linux运维
 keywords: 
 description: 
 ---
@@ -13,11 +13,6 @@ description:
 
 - CentOS 6.8 X64
 - Java：7.79
-
-### 文章要求
-
-- 有一定的Linux基础
-- 新人的话，建议先适当的了解一些Linux基础命令
 
 ### 卸载OpenJDK
 
