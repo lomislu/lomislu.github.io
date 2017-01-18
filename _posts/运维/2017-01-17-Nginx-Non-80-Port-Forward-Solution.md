@@ -14,15 +14,15 @@ Nginx 虚拟主机配置如下：
 
 ```bash
 server {
-　　listen 81;
-　　server_name localhost;
-　　location / {
-　　	proxy_pass http://x.x.x.x:8080;
-　　	proxy_set_header Host $host;
-　　	proxy_set_header X-Real-IP $remote_addr;
-　　	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-　　	proxy_set_header Via "nginx";
-　　}
+	listen 81;
+	server_name localhost;
+	location / {
+		proxy_pass http://x.x.x.x:8080;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Via "nginx";
+	}
 }
 ```
 
@@ -32,14 +32,14 @@ server {
 
 ```bash
 server {
-　　listen 81;
-　　server_name localhost;
-　　location / {
-　　	proxy_pass http://x.x.x.x:8080;
-　　	proxy_set_header Host $host:81;
-　　	proxy_set_header X-Real-IP $remote_addr;
-　　	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-　　	proxy_set_header Via "nginx";
-　　}
+	listen 81;
+	server_name localhost;
+	location / {
+		proxy_pass http://x.x.x.x:8080;
+		proxy_set_header Host $host:81;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Via "nginx";
+	}
 }
 ```
