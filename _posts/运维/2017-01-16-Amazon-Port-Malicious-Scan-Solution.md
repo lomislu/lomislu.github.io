@@ -51,10 +51,10 @@ $ htpasswd -b -c /etc/nginx/nginx_passwd username password
 
 ```bash
 server {
-           listen       80;
-           server_name  xxx.xxx.com
-           auth_basic "密码提示语";  
-           auth_basic_user_file /vhost/nginx_passwd;
+	listen       80;
+	server_name  xxx.xxx.com
+	auth_basic "密码提示语";  
+	auth_basic_user_file /vhost/nginx_passwd;
 }
 ```
 
@@ -62,7 +62,7 @@ server {
 
 ```bash
 location /webservice {
-     auth_basic "密码提示语";  
-     auth_basic_user_file /vhost/nginx_passwd;  
+	auth_basic "密码提示语";  
+	auth_basic_user_file /vhost/nginx_passwd;  
 }
 ```
