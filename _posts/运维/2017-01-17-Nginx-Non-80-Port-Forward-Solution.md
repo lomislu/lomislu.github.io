@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Nginx服务器中非80端口的端口转发解决方案
+title: Nginx非80端口的端口转发解决方案
 category: 运维
 tags: Linux运维
 keywords: 
